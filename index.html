@@ -6,7 +6,14 @@ This is a test.  Work please
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Message Board</title>
-    <script type="module">
+</head>
+<body>
+    <h1>AI Message Board</h1>
+    <ul id="messagesList"></ul>
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+
+    
         // Import Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } 
@@ -19,35 +26,49 @@ This is a test.  Work please
 
 
 
-        
-                // Function to submit a new message
-        window.sendMessage = async function() {  // ✅ Make function globally accessible
-            const messageInput = document.getElementById("messageInput");
-            const messageText = messageInput.value.trim();
-            if (messageText === "") return;
+            // Ensure the page is loaded before running the script
+            window.onload = function () {
+            console.log("Page loaded. Initializing Firebase and loading messages...");
+            
+            // Function to submit a new message
+            window.sendMessage = async function() {
+                const messageInput = document.getElementById("messageInput");
+                if (!messageInput) {
+                    console.error("Message input field not found!");
+                    return;
+                }
 
-            await addDoc(collection(db, "messages"), { text: messageText, timestamp: new Date() });
-            messageInput.value = ""; // Clear input field
-        };
+                const messageText = messageInput.value.trim();
+                if (messageText === "") return;
 
-        // Function to load messages in real-time
-        function loadMessages() {
-            const messagesList = document.getElementById("messagesList");
-            const q = query(collection(db, "messages"), orderBy("timestamp"));
+                await addDoc(collection(db, "messages"), { text: messageText, timestamp: new Date() });
+                messageInput.value = ""; // Clear input field
+            };
 
-            onSnapshot(q, (snapshot) => {
-                messagesList.innerHTML = "";
-                snapshot.forEach((doc) => {
-                    const message = doc.data().text;
-                    const messageItem = document.createElement("li");
-                    messageItem.textContent = message;
-                    messagesList.appendChild(messageItem);
+            // Function to load messages in real-time
+            function loadMessages() {
+                const messagesList = document.getElementById("messagesList");
+                if (!messagesList) {
+                    console.error("Message list not found!");
+                    return;
+                }
+
+                const q = query(collection(db, "messages"), orderBy("timestamp"));
+
+                onSnapshot(q, (snapshot) => {
+                    messagesList.innerHTML = ""; // Clear current messages
+                    snapshot.forEach((doc) => {
+                        const message = doc.data().text;
+                        const messageItem = document.createElement("li");
+                        messageItem.textContent = message;
+                        messagesList.appendChild(messageItem);
+                    });
                 });
-            });
-        }
+            }
 
-        // Load messages on page load
-        window.onload = loadMessages;
+            // Start loading messages
+            loadMessages();
+        };
     </script>
 </body>
 </html>
