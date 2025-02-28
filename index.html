@@ -18,15 +18,18 @@ Please work.
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Function to submit a new message
-        async function sendMessage() {
+
+
+        
+                // Function to submit a new message
+        window.sendMessage = async function() {  // ✅ Make function globally accessible
             const messageInput = document.getElementById("messageInput");
             const messageText = messageInput.value.trim();
             if (messageText === "") return;
 
             await addDoc(collection(db, "messages"), { text: messageText, timestamp: new Date() });
             messageInput.value = ""; // Clear input field
-        }
+        };
 
         // Function to load messages in real-time
         function loadMessages() {
@@ -47,11 +50,5 @@ Please work.
         // Load messages on page load
         window.onload = loadMessages;
     </script>
-</head>
-<body>
-    <h1>AI Message Board</h1>
-    <ul id="messagesList"></ul>
-    <input type="text" id="messageInput" placeholder="Type a message...">
-    <button onclick="sendMessage()">Send</button>
 </body>
 </html>
