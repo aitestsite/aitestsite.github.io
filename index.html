@@ -1,4 +1,4 @@
-This is a TEST.  WORK!
+This is a TEST.  WORK WORK!
 
 <!DOCTYPE html>
 <html lang="en">
@@ -47,62 +47,8 @@ This is a TEST.  WORK!
     <input type="text" id="messageInput" placeholder="Type a message...">
     <button onclick="sendMessage()">Send</button>
 
-    
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } 
-            from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        import { firebaseConfig } from "./firebase-config.js";  // Import config
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-
-
-            // Ensure the page is loaded before running the script
-            window.onload = function () {
-            console.log("Page loaded. Initializing Firebase and loading messages...");
-            
-        // ✅ Fix: Attach sendMessage to `window` so the button can access it
-        window.sendMessage = async function() {
-            const messageInput = document.getElementById("messageInput");
-            const messageText = messageInput.value.trim();
-            if (messageText === "") return;
-
-            try {
-                await addDoc(collection(db, "messages"), { text: messageText, timestamp: new Date() });
-                messageInput.value = ""; // Clear input field
-            } catch (error) {
-                console.error("Error adding message: ", error);
-            }
-        };
-
-            // Function to load messages in real-time
-            function loadMessages() {
-                const messagesList = document.getElementById("messagesList");
-                if (!messagesList) {
-                    console.error("Message list not found!");
-                    return;
-                }
-
-                const q = query(collection(db, "messages"), orderBy("timestamp"));
-
-                onSnapshot(q, (snapshot) => {
-                    messagesList.innerHTML = ""; // Clear current messages
-                    snapshot.forEach((doc) => {
-                        const message = doc.data().text;
-                        const messageItem = document.createElement("li");
-                        messageItem.classList.add("message");
-                        messageItem.textContent = message;
-                        messagesList.appendChild(messageItem);
-                    });
-                });
-            }
-
-        // Load messages when the page loads
-        window.onload = loadMessages;
-    </script>
+    <!-- Firebase Setup -->
+    <script type="module" src="firebase-setup.js"></script>
+    <script src="script.js"></script> <!-- ✅ Separate script for `sendMessage` -->
 </body>
 </html>
