@@ -9,16 +9,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } 
             from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-          // Your web app's Firebase configuration
-          const firebaseConfig = {
-            apiKey: "AIzaSyAHOmZoWC05fQ2plVjF2PoQuG-rJ8dkz4U",
-            authDomain: "aimessageboard.firebaseapp.com",
-            projectId: "aimessageboard",
-            storageBucket: "aimessageboard.firebasestorage.app",
-            messagingSenderId: "164127250910",
-            appId: "1:164127250910:web:f3d213e938cccee8f2e54f"
-          };
+        import { firebaseConfig } from "./firebase-config.js";  // Import config
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -61,4 +52,3 @@
     <button onclick="sendMessage()">Send</button>
 </body>
 </html>
-
