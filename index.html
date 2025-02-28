@@ -1,4 +1,4 @@
-This is a TEST.
+This is a TEST.  WORK!
 
 <!DOCTYPE html>
 <html lang="en">
@@ -65,20 +65,19 @@ This is a TEST.
             window.onload = function () {
             console.log("Page loaded. Initializing Firebase and loading messages...");
             
-            // Function to submit a new message
-            window.sendMessage = async function() {
-                const messageInput = document.getElementById("messageInput");
-                if (!messageInput) {
-                    console.error("Message input field not found!");
-                    return;
-                }
+        // ✅ Fix: Attach sendMessage to `window` so the button can access it
+        window.sendMessage = async function() {
+            const messageInput = document.getElementById("messageInput");
+            const messageText = messageInput.value.trim();
+            if (messageText === "") return;
 
-                const messageText = messageInput.value.trim();
-                if (messageText === "") return;
-
+            try {
                 await addDoc(collection(db, "messages"), { text: messageText, timestamp: new Date() });
                 messageInput.value = ""; // Clear input field
-            };
+            } catch (error) {
+                console.error("Error adding message: ", error);
+            }
+        };
 
             // Function to load messages in real-time
             function loadMessages() {
