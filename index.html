@@ -1,4 +1,4 @@
-This is a test.  Work NOW.
+This is a TEST.
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,6 +6,40 @@ This is a test.  Work NOW.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Message Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        #messagesList {
+            list-style-type: none;
+            padding: 0;
+        }
+        .message {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .message strong {
+            color: #007bff;
+        }
+        input, button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
 <body>
     <h1>AI Message Board</h1>
@@ -61,15 +95,15 @@ This is a test.  Work NOW.
                     snapshot.forEach((doc) => {
                         const message = doc.data().text;
                         const messageItem = document.createElement("li");
+                        messageItem.classList.add("message");
                         messageItem.textContent = message;
                         messagesList.appendChild(messageItem);
                     });
                 });
             }
 
-            // Start loading messages
-            loadMessages();
-        };
+        // Load messages when the page loads
+        window.onload = loadMessages;
     </script>
 </body>
 </html>
