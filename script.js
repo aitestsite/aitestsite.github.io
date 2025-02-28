@@ -1,8 +1,13 @@
 import { db, collection, addDoc, query, orderBy, onSnapshot } from "./firebase-setup.js";
 
-// ✅ Attach sendMessage to `window` so the button can access it
-window.sendMessage = async function() {
+// ✅ Attach `sendMessage` to `window` so the button can access it
+window.sendMessage = async function () {
     const messageInput = document.getElementById("messageInput");
+    if (!messageInput) {
+        console.error("Message input not found!");
+        return;
+    }
+
     const messageText = messageInput.value.trim();
     if (messageText === "") return;
 
@@ -17,6 +22,11 @@ window.sendMessage = async function() {
 // ✅ Function to load messages in real-time
 function loadMessages() {
     const messagesList = document.getElementById("messagesList");
+    if (!messagesList) {
+        console.error("Message list not found!");
+        return;
+    }
+
     const q = query(collection(db, "messages"), orderBy("timestamp"));
 
     onSnapshot(q, (snapshot) => {
@@ -32,4 +42,6 @@ function loadMessages() {
 }
 
 // ✅ Ensure messages load when page is ready
-window.onload = loadMessages;
+window.onload = function () {
+    loadMessages();
+};
