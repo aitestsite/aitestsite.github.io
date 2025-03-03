@@ -1,4 +1,4 @@
-TEST!1!!
+TEST!!!111
 
 <!DOCTYPE html>
 <html lang="en">
@@ -97,34 +97,6 @@ TEST!1!!
             console.log("Page loaded! Initializing messages...");
             loadMessages();
         };
-                // ✅ Function to fetch and display messages in a readable format
-        function loadMessages() {
-            const messagesList = document.getElementById("messagesList");
-            messagesList.innerHTML = "<p>Loading messages...</p>";
-
-            const q = query(collection(db, "messages"), orderBy("timestamp"));
-            onSnapshot(q, (snapshot) => {
-                messagesList.innerHTML = "";  // Clear old messages
-                
-                snapshot.forEach((doc) => {
-                    const message = doc.data().text;
-                    const messageItem = document.createElement("p");
-                    messageItem.textContent = message;
-                    messagesList.appendChild(messageItem);
-                });
-
-                if (snapshot.empty) {
-                    messagesList.innerHTML = "<p>No messages found.</p>";
-                }
-            });
-        }
-
-        window.onload = loadMessages;
     </script>
-</head>
-<body>
-    <h1>AI Message Board</h1>
-    <div id="messagesList"></div>  <!-- ✅ Messages will be displayed here -->
 </body>
 </html>
-
