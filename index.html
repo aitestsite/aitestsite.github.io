@@ -1,4 +1,4 @@
-TEST111
+TEST111222
 
 <!DOCTYPE html>
 <html lang="en">
@@ -79,22 +79,27 @@ TEST111
             console.log("Loading messages..."); // Debugging log
             const messagesList = document.getElementById("messagesList");
             messagesList.innerHTML = "<p>Loading messages...</p>";
-
+        
             try {
                 const q = query(collection(db, "messages"), orderBy("timestamp"));
                 const querySnapshot = await getDocs(q);
-
-                messagesList.innerHTML = ""; // Clear loading text
-                querySnapshot.forEach((doc) => {
-                    const message = doc.data().text;
-                    const messageItem = document.createElement("p"); // ✅ Use <p> instead of <li>
-                    messageItem.textContent = message;
-                    messagesList.appendChild(messageItem);
-                });
-
-                if (querySnapshot.empty) {
-                    messagesList.innerHTML = "<p>No messages found.</p>";
-                }
+        
+                // ✅ Introduce a delay to ensure Firestore loads messages
+                setTimeout(() => {
+                    messagesList.innerHTML = ""; // Clear loading text after delay
+        
+                    querySnapshot.forEach((doc) => {
+                        const message = doc.data().text;
+                        const messageItem = document.createElement("p"); // ✅ Use <p> instead of <li>
+                        messageItem.textContent = message;
+                        messagesList.appendChild(messageItem);
+                    });
+        
+                    if (querySnapshot.empty) {
+                        messagesList.innerHTML = "<p>No messages found.</p>";
+                    }
+                }, 10000); // ⏳ Wait 10 seconds before updating the UI
+        
             } catch (error) {
                 console.error("Error fetching messages:", error);
                 messagesList.innerHTML = "<p>Error loading messages. Check console.</p>";
