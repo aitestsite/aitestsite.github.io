@@ -1,4 +1,4 @@
-TEST12345
+TEST123456
 
 <!DOCTYPE html>
 <html lang="en">
@@ -94,14 +94,15 @@ TEST12345
             let messageHTML = "";  // ✅ Store all messages in a string
             snapshot.forEach((doc) => {
                 const message = doc.data().text;
-                messageHTML += `<p>${message}</p>`;  // ✅ Write messages as plain text
+                messageHTML += `<p>${message}</p>\n`;  // ✅ Write messages as raw text
             });
     
             if (snapshot.empty) {
                 messageHTML = "<p>No messages found.</p>";
             }
     
-            messagesList.innerHTML = messageHTML;  // ✅ Update page source with raw text
+            messagesList.innerHTML = messageHTML;  // ✅ Messages will now be part of raw HTML
+            console.log("Messages updated in HTML:", messageHTML);
         });
     }
 
