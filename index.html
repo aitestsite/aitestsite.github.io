@@ -1,4 +1,4 @@
-TEST123
+TEST1234
 
 <!DOCTYPE html>
 <html lang="en">
@@ -85,36 +85,25 @@ TEST123
         };
 
         // ✅ Function to load messages in real-time and ensure they are visible
-        async function loadMessages() {
-            console.log("Loading messages..."); // Debugging log
-            const messagesList = document.getElementById("messagesList");
-            messagesList.innerHTML = "<p>Loading messages...</p>";
-        
-            try {
-                const q = query(collection(db, "messages"), orderBy("timestamp"));
-                const querySnapshot = await getDocs(q);
-        
-                // ✅ Introduce a delay to ensure Firestore loads messages
-                setTimeout(() => {
-                    messagesList.innerHTML = ""; // Clear loading text after delay
-        
-                    querySnapshot.forEach((doc) => {
-                        const message = doc.data().text;
-                        const messageItem = document.createElement("p"); // ✅ Use <p> instead of <li>
-                        messageItem.textContent = message;
-                        messagesList.appendChild(messageItem);
-                    });
-        
-                    if (querySnapshot.empty) {
-                        messagesList.innerHTML = "<p>No messages found.</p>";
-                    }
-                }, 10000); // ⏳ Wait 10 seconds before updating the UI
-        
-            } catch (error) {
-                console.error("Error fetching messages:", error);
-                messagesList.innerHTML = "<p>Error loading messages. Check console.</p>";
+        function loadMessages() {
+        console.log("Loading messages...");
+        const messagesList = document.getElementById("messagesList");
+    
+        const q = query(collection(db, "messages"), orderBy("timestamp"));
+        onSnapshot(q, (snapshot) => {
+            let messageHTML = "";  // ✅ Store all messages in a string
+            snapshot.forEach((doc) => {
+                const message = doc.data().text;
+                messageHTML += `<p>${message}</p>`;  // ✅ Write messages as plain text
+            });
+    
+            if (snapshot.empty) {
+                messageHTML = "<p>No messages found.</p>";
             }
-        }
+    
+            messagesList.innerHTML = messageHTML;  // ✅ Update page source with raw text
+        });
+    }
 
         // ✅ Ensure messages load when page is ready
         window.onload = function() {
