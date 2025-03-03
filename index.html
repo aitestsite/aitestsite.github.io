@@ -1,4 +1,4 @@
-TEST111222
+TEST12
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +50,7 @@ TEST111222
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs } 
+        import { getFirestore, collection, addDoc, query, orderBy, getDocs, enableIndexedDbPersistence }
             from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         import { firebaseConfig } from "./firebase-config.js";  // Import config
 
@@ -58,6 +58,11 @@ TEST111222
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // ✅ Force Firestore to use IndexedDB persistence
+        enableIndexedDbPersistence(db).catch((err) => {
+            console.error("Persistence error:", err);
+        });
+        
         // ✅ Define sendMessage inside index.html so it is globally accessible
         window.sendMessage = async function() {
             console.log("sendMessage function called!"); // Debugging log
