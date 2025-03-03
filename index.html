@@ -1,4 +1,4 @@
-TEST12
+TEST123
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,15 +50,20 @@ TEST12
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, getDocs, enableIndexedDbPersistence }
+        import { getFirestore, collection, addDoc, query, orderBy, getDocs, enableIndexedDbPersistence, initializeFirestore }
             from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        import { firebaseConfig } from "./firebase-config.js";  // Import config
-
-        // Initialize Firebase
+        import { firebaseConfig } from "./firebase-config.js";  
+        
+        // ✅ Initialize Firebase App
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // ✅ Force Firestore to use IndexedDB persistence
+        
+        // ✅ Force Firestore to use a specific region (e.g., "us-central1")
+        const db = initializeFirestore(app, {
+            host: "firestore.googleapis.com",
+            ssl: true,
+        });
+        
+        // ✅ Enable Offline Persistence
         enableIndexedDbPersistence(db).catch((err) => {
             console.error("Persistence error:", err);
         });
