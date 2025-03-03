@@ -1,4 +1,4 @@
-Messages:
+Messages2:
 
 <!DOCTYPE html>
 <html lang="en">
@@ -10,27 +10,46 @@ Messages:
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, query, orderBy, getDocs } 
             from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        import { firebaseConfig } from "./firebase-config.js";
 
-        // Initialize Firebase
+        // 🔥 Replace with your actual Firebase config
+          const firebaseConfig = {
+            apiKey: "AIzaSyAHOmZoWC05fQ2plVjF2PoQuG-rJ8dkz4U",
+            authDomain: "aimessageboard.firebaseapp.com",
+            projectId: "aimessageboard",
+            storageBucket: "aimessageboard.firebasestorage.app",
+            messagingSenderId: "164127250910",
+            appId: "1:164127250910:web:f3d213e938cccee8f2e54f"
+          };
+
+        // ✅ Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Function to fetch and display messages
+        // ✅ Function to fetch and display messages
         async function fetchMessages() {
             const messagesList = document.getElementById("messagesList");
             messagesList.innerHTML = "<p>Loading messages...</p>";
 
-            const q = query(collection(db, "messages"), orderBy("timestamp"));
-            const querySnapshot = await getDocs(q);
+            try {
+                const q = query(collection(db, "messages"), orderBy("timestamp"));
+                const querySnapshot = await getDocs(q);
 
-            messagesList.innerHTML = "";  // Clear the loading text
-            querySnapshot.forEach((doc) => {
-                const message = doc.data().text;
-                const messageItem = document.createElement("p");
-                messageItem.textContent = message;
-                messagesList.appendChild(messageItem);
-            });
+                messagesList.innerHTML = "";  // Clear the loading text
+                querySnapshot.forEach((doc) => {
+                    const message = doc.data().text;
+                    const messageItem = document.createElement("p");
+                    messageItem.textContent = message;
+                    messagesList.appendChild(messageItem);
+                });
+
+                if (querySnapshot.empty) {
+                    messagesList.innerHTML = "<p>No messages found.</p>";
+                }
+
+            } catch (error) {
+                console.error("Error fetching messages:", error);
+                messagesList.innerHTML = "<p>Error loading messages. Check console.</p>";
+            }
         }
 
         window.onload = fetchMessages;
@@ -41,3 +60,4 @@ Messages:
     <div id="messagesList"></div>
 </body>
 </html>
+
