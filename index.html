@@ -1,4 +1,4 @@
-TEST!!!111
+TEST111
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +50,7 @@ TEST!!!111
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } 
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs } 
             from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
         import { firebaseConfig } from "./firebase-config.js";  // Import config
 
@@ -74,22 +74,31 @@ TEST!!!111
             }
         };
 
-        // ✅ Function to load messages in real-time
-        function loadMessages() {
+        // ✅ Function to load messages in real-time and ensure they are visible
+        async function loadMessages() {
             console.log("Loading messages..."); // Debugging log
             const messagesList = document.getElementById("messagesList");
-            const q = query(collection(db, "messages"), orderBy("timestamp"));
+            messagesList.innerHTML = "<p>Loading messages...</p>";
 
-            onSnapshot(q, (snapshot) => {
-                messagesList.innerHTML = ""; // Clear existing messages
-                snapshot.forEach((doc) => {
+            try {
+                const q = query(collection(db, "messages"), orderBy("timestamp"));
+                const querySnapshot = await getDocs(q);
+
+                messagesList.innerHTML = ""; // Clear loading text
+                querySnapshot.forEach((doc) => {
                     const message = doc.data().text;
-                    const messageItem = document.createElement("li");
-                    messageItem.classList.add("message");
+                    const messageItem = document.createElement("p"); // ✅ Use <p> instead of <li>
                     messageItem.textContent = message;
                     messagesList.appendChild(messageItem);
                 });
-            });
+
+                if (querySnapshot.empty) {
+                    messagesList.innerHTML = "<p>No messages found.</p>";
+                }
+            } catch (error) {
+                console.error("Error fetching messages:", error);
+                messagesList.innerHTML = "<p>Error loading messages. Check console.</p>";
+            }
         }
 
         // ✅ Ensure messages load when page is ready
